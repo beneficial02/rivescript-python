@@ -490,7 +490,7 @@ class Brain(object):
             pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
             pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
             pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
-            # pdb.set_trace()
+
             # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
             #                 '(?:' + match + ')?', regexp)
             regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
@@ -513,7 +513,7 @@ class Brain(object):
             pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
             pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
             pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
-            pdb.set_trace()
+            # pdb.set_trace()
             # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
             #                 '(?:' + match + ')?', regexp)
             regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
@@ -536,7 +536,7 @@ class Brain(object):
             pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
             pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
             pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
-            pdb.set_trace()
+            # pdb.set_trace()
             # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
             #                 '(?:' + match + ')?', regexp)
             regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
@@ -556,15 +556,63 @@ class Brain(object):
             # non-matching.
             # pipes = '|'.join(new)
             pipes = match
-            pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
+            pipes = pipes.replace(r'(.+?)', r'(?:.*?)')
             pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
             pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
             pdb.set_trace()
             # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
             #                 '(?:' + match + ')?', regexp)
             regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
-                            r'(?:(?:' + pipes + r')' + r'|(?:\s))', regexp)
+                            r'(?:(?:' + pipes + r'))', regexp)
 
+        optionals_for_end = re.findall(RE.optionals_for_end, regexp)
+        for match in optionals_for_end:
+            pdb.set_trace()
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
+            # If this optional had a star or anything in it, make it
+            # non-matching.
+            # pipes = '|'.join(new)
+            print('end????????????????')
+            pipes = match
+            pipes = pipes.replace(r'(.+?)', r'(?:.*?)')
+            pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+            pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
+            regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+                            r'(?:(?:' + pipes + r'))$', regexp)
+
+        optionals_for_start = re.findall(RE.optionals_for_start, regexp)
+        for match in optionals_for_start:
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
+            # If this optional had a star or anything in it, make it
+            # non-matching.
+            # pipes = '|'.join(new)
+            print('start????????????????')
+            pipes = match
+            pipes = pipes.replace(r'(.+?)', r'(?:.*?)')
+            pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+            pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+            pdb.set_trace()
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
+            regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+                            r'^(?:(?:' + pipes + r'))', regexp)
 
         # _ wildcards can't match numbers!
         regexp = re.sub(RE.literal_w, r'[^\\s\\d]', regexp)

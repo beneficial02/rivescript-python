@@ -1,15 +1,11 @@
 + *
 - wrong
 
-+ (가가) [*] (나나)
-- both
++ game has (beg|start)[*]
+- GOOD!
 
-+ (가가) [*](나나)
-- left
++ [*] love me
+- Sorry I can't love you
 
-+ (가가)[*] (나나)
-- right
-
-+ (가가)[*](나나)
-- without ws
-
++ [*] give me [*]
+- No i won't

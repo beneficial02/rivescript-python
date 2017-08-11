@@ -53,4 +53,6 @@ class RE(object):
     optionals_with_left_ws = re.compile(r'\s\[(.+?)\]\S')
     optionals_with_right_ws = re.compile(r'\S\[(.+?)\]\s')
     optionals_without_ws = re.compile(r'\S\[(.+?)\]\S')
+    optionals_for_end = re.compile(r'\[(.+?)\]$')
+    optionals_for_start = re.compile(r'^\[(.+?)\]')
     empty_pipe   = re.compile(r'\|\s*\||\[\s*\||\|\s*\]|\(\s*\||\|\s*\)')  # ||, [|, |], (|, |)
