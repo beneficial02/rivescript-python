@@ -67,6 +67,7 @@ class RiveScript(object):
                  utf8=False, session_manager=None):
         """Initialize a new RiveScript interpreter."""
 
+        print('INITIATE!!!!!!!!')
         ###
         # User configurable fields.
         ###
@@ -109,7 +110,7 @@ class RiveScript(object):
             "sub":    {},
             "person":  {},
         }
-        
+
         # Initialize the session manager.
         if session_manager is None:
             session_manager = MemorySessionStorage(warn=self._warn)
@@ -191,6 +192,7 @@ class RiveScript(object):
                         break
 
     def load_file(self, filename):
+        print('load file?')
         """Load and parse a RiveScript document.
 
         :param str filename: The path to a RiveScript file.
@@ -205,6 +207,7 @@ class RiveScript(object):
         self._parse(filename, lines)
 
     def stream(self, code):
+        print('stream?')
         """Stream in RiveScript source code dynamically.
 
         :param code: Either a string containing RiveScript code or an array of
@@ -1038,7 +1041,7 @@ class RiveScript(object):
         for tag in ["@", "<bot", "<get", "<input", "<reply"]:
             if tag in trigger:
                 return  # Can't precompile this trigger.
-
+        print('===============4444444444444')
         self._regexc["trigger"][trigger] = self._brain.reply_regexp(None, trigger)
 
     ############################################################################

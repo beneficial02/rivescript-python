@@ -49,4 +49,8 @@ class RE(object):
     placeholder = re.compile(r'\x00(\d+)\x00')
     zero_star   = re.compile(r'^\*$')
     optionals   = re.compile(r'\[(.+?)\]')
+    optionals_with_both_ws = re.compile(r'\s\[(.+?)\]\s')
+    optionals_with_left_ws = re.compile(r'\s\[(.+?)\]\S')
+    optionals_with_right_ws = re.compile(r'\S\[(.+?)\]\s')
+    optionals_without_ws = re.compile(r'\S\[(.+?)\]\S')
     empty_pipe   = re.compile(r'\|\s*\||\[\s*\||\|\s*\]|\(\s*\||\|\s*\)')  # ||, [|, |], (|, |)

@@ -18,6 +18,7 @@ from . import utils
 import re
 from six import text_type
 import sys
+import pdb
 
 class Brain(object):
     """The Brain class controls the actual reply fetching phase for RiveScript.
@@ -226,6 +227,7 @@ class Brain(object):
 
                     # See if it's a match.
                     for trig in self.master._sorted["thats"][top]:
+                        print('======================11111')
                         pattern = trig[1]["previous"]
                         botside = self.reply_regexp(user, pattern)
                         self.say("Try to match lastReply ({}) to {} ({})".format(lastReply, pattern, repr(botside)))
@@ -239,6 +241,7 @@ class Brain(object):
 
                             # Compare the triggers to the user's message.
                             user_side = trig[1]
+                            print('======================22222')
                             subtrig = self.reply_regexp(user, user_side["trigger"])
                             self.say("Now try to match " + msg + " to " + user_side["trigger"])
 
@@ -266,6 +269,8 @@ class Brain(object):
                 pattern = trig[0]
 
                 # Process the triggers.
+                print('====================33333')
+
                 regexp = self.reply_regexp(user, pattern)
                 self.say("Try to match %r against %r (%r)" % (msg, pattern, regexp.pattern))
 
@@ -280,6 +285,7 @@ class Brain(object):
                         isMatch = True
                 else:
                     # Non-atomic triggers always need the regexp.
+                    # pdb.set_trace()
                     match = re.match(regexp, msg)
                     if match:
                         # The regexp matched!
@@ -419,6 +425,7 @@ class Brain(object):
         return reply
 
     def reply_regexp(self, user, regexp):
+        print('reply_regexp?')
         """Prepares a trigger for the regular expression engine.
 
         :param str user: The user ID invoking a reply.
@@ -430,6 +437,7 @@ class Brain(object):
             # Already compiled this one!
             return self.master._regexc["trigger"][regexp]
 
+        # pdb.set_trace()
         # If the trigger is simply '*' then the * there needs to become (.*?)
         # to match the blank string too.
         regexp = re.sub(RE.zero_star, r'<zerowidthstar>', regexp)
@@ -442,23 +450,121 @@ class Brain(object):
         regexp = regexp.replace('<zerowidthstar>', r'(.*?)')
 
         # Optionals.
-        optionals = re.findall(RE.optionals, regexp)
-        for match in optionals:
-            parts = match.split("|")
-            new = []
-            for p in parts:
-                p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
-                new.append(p)
+        # pdb.set_trace()
+        # print('THIS IS THE TEST')
+        # optionals = re.findall(RE.optionals, regexp)
+        # for match in optionals:
+        #     parts = match.split("|")
+        #     new = []
+        #     # pdb.set_trace()
+        #     for p in parts:
+        #         p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+        #         new.append(p)
+        #
+        #     # pdb.set_trace()
+        #     # If this optional had a star or anything in it, make it
+        #     # non-matching.
+        #     pipes = '|'.join(new)
+        #     pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
+        #     pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+        #     pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+        #     pdb.set_trace()
+        #     regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+        #         '(?:' + pipes + r'|(?:\\s|\\b))', regexp)
 
+        # BOTH WS
+        optionals_with_both_ws = re.findall(RE.optionals_with_both_ws, regexp)
+        for match in optionals_with_both_ws:
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
             # If this optional had a star or anything in it, make it
             # non-matching.
-            pipes = '|'.join(new)
+            # pipes = '|'.join(new)
+            pipes = match
             pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
             pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
             pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
-
+            # pdb.set_trace()
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
             regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
-                '(?:' + pipes + r'|(?:\\s|\\b))', regexp)
+                            r'(?:(?:\s' + pipes + r'\s)' + r'|(?:\s))', regexp)
+
+        optionals_with_left_ws = re.findall(RE.optionals_with_left_ws, regexp)
+        for match in optionals_with_left_ws:
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
+            # If this optional had a star or anything in it, make it
+            # non-matching.
+            # pipes = '|'.join(new)
+            pipes = match
+            pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
+            pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+            pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+            pdb.set_trace()
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
+            regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+                            r'(?:(?:\s' + pipes + r')' + r'|(?:\s))', regexp)
+
+        optionals_with_right_ws = re.findall(RE.optionals_with_right_ws, regexp)
+        for match in optionals_with_right_ws:
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
+            # If this optional had a star or anything in it, make it
+            # non-matching.
+            # pipes = '|'.join(new)
+            pipes = match
+            pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
+            pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+            pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+            pdb.set_trace()
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
+            regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+                            r'(?:(?:' + pipes + r'\s)' + r'|(?:\s))', regexp)
+
+        optionals_without_ws = re.findall(RE.optionals_without_ws, regexp)
+        for match in optionals_without_ws:
+            # parts = match.split("|")
+            # new = []
+            # pdb.set_trace()
+            # for p in parts:
+            #     p = r'(?:\\s|\\b)+{}(?:\\s|\\b)+'.format(p.strip())
+            #     new.append(p)
+
+            # pdb.set_trace()
+            # If this optional had a star or anything in it, make it
+            # non-matching.
+            # pipes = '|'.join(new)
+            pipes = match
+            pipes = pipes.replace(r'(.+?)', r'(?:.+?)')
+            pipes = pipes.replace(r'(\d+?)', r'(?:\d+?)')
+            pipes = pipes.replace(r'([A-Za-z]+?)', r'(?:[A-Za-z]+?)')
+            pdb.set_trace()
+            # regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+            #                 '(?:' + match + ')?', regexp)
+            regexp = re.sub(r'\s*\[' + re.escape(match) + '\]\s*',
+                            r'(?:(?:' + pipes + r')' + r'|(?:\s))', regexp)
+
 
         # _ wildcards can't match numbers!
         regexp = re.sub(RE.literal_w, r'[^\\s\\d]', regexp)
